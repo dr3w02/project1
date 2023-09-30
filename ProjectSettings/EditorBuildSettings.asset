@@ -6,6 +6,21 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Game.unity
+    path: Assets/Drew/Scenes/IntroCutScene.unity
+    guid: ab941ccd0cd2c2d47b29a52cc6f77f14
+  - enabled: 1
+    path: Assets/Drew/Scenes/Game.unity
     guid: 0bb44aed428cec14187d5d9bf6a33160
+  - enabled: 1
+    path: Assets/Drew/Scenes/WhacAMole.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Drew/Scenes/SkullSmasher.unity
+    guid: 1a45171d2a5c8ca4080d5932bb8d144a
+  - enabled: 1
+    path: Assets/Drew/Scenes/WinnerCutScene.unity
+    guid: 93e228f8087ebfc4697bffbb82795f8e
+  - enabled: 1
+    path: Assets/Drew/Scenes/Final Credits.unity
+    guid: bf124e702c3185948b9b4097b2bdb0fe
   m_configObjects: {}

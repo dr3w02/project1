@@ -5,6 +5,8 @@ using System.Threading;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using TMPro;
+using Unity.Collections;
+using UnityEditor.SearchService;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +14,7 @@ public class GameManager : MonoBehaviour
 
     [Header("UI objects")]
     [SerializeField] private GameObject playButton;
+    [SerializeField] private GameObject nextButton;
     [SerializeField] private GameObject gameUI;
     [SerializeField] private GameObject outOfTimeText;
     [SerializeField] private GameObject bombText;
@@ -41,7 +44,7 @@ public class GameManager : MonoBehaviour
         outOfTimeText.SetActive(false);
         bombText.SetActive(false);
         gameUI.SetActive(true);
-
+        nextButton.SetActive(false);
         //hide all the visable moles
         for (int i = 0; i < moles.Count; i++)
         {
@@ -71,18 +74,18 @@ public class GameManager : MonoBehaviour
         {
             bombText.SetActive(true);
         }
-    
-         //Hide all the moles 
-         foreach (Mole mole in moles)
-         {
+
+        //Hide all the moles 
+        foreach (Mole mole in moles)
+        {
             mole.StopGame();
 
-         }
-            playing = false;
+        }
+        playing = false;
     }
     //ending the game no more moles left to click
-   
-    
+
+
     void Update()
     {
         if (playing)
@@ -92,8 +95,11 @@ public class GameManager : MonoBehaviour
             {
                 timeRemaining = 0;
                 GameOver(0);
+                nextButton.SetActive(true);
             }
-            
+
+
+
             timeText.text = $"{(int)timeRemaining / 60}:{(int)timeRemaining % 60:D2}";
 
             //15 min in video he explains this part, this is bascially saying once 10 moles have been hit the level diffculty will increase
@@ -111,20 +117,20 @@ public class GameManager : MonoBehaviour
 
             }
         }
-      
+
     }
     public void AddScore(int moleIndex, int playerIndex) //for when we've sucessfully clicked the mole
     {
         //add and update score
         score += 1;
         scoreText[playerIndex].text = $"{score}";
-        
+
 
         currentMoles.Remove(moles[moleIndex]);
 
     }
 
-  
+
 
 }
 
