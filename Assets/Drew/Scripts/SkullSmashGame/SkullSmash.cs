@@ -13,7 +13,14 @@ public class SkullSmash : MonoBehaviour
     private SpriteRenderer spriteRenderer;
 
     private bool hittable = true;
-  
+    private int skullsIndex = 0;
+    
+    
+    public void SetIndex(int index)
+    {
+        skullsIndex = index;
+    }
+
     public void HitSkull(int player)
     {
         {

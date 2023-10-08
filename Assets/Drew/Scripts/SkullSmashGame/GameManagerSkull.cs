@@ -13,82 +13,66 @@ public class GameManagerSkull : MonoBehaviour
     [SerializeField] private List<SkullSmash> skulls;
     [SerializeField] private GameObject playButton;
     [SerializeField] private GameObject gameUI;
-    
+    [SerializeField] private GameObject nextButton;
     [SerializeField] private GameObject player1WinText;
     [SerializeField] private GameObject player2WinText;
     [SerializeField] private TextMeshProUGUI timeText;
     [SerializeField] private GameObject outOfTimeText;
 
-    [SerializeField] private List<TextMeshProUGUI> ClickText = new List<TextMeshProUGUI>();
-    [SerializeField] private List<TextMeshProUGUI> ClickText1 = new List<TextMeshProUGUI>();
-   
+    
+    [SerializeField] private List<TextMeshProUGUI> scoreText = new List<TextMeshProUGUI>();
     
     
+
+    private HashSet<SkullClicker> currentClicks = new HashSet<SkullClicker>();
+
+    ScoreManager scoreManager;
+    
+    private int score;
+    private bool playing = false;
+    public int skullsIndex;
+    public SkullClicker currentClicks;
+
 
     //This determins the amount of time in game change depending on time we want for our minigame
     private float startingTime = 60f;
-    
+
     //this tracks how much time is remaining 
     private float timeRemaining;
     //this tracks the amount of moles
-    
-    // this controls how were doing in corilation to the moles left
-   
-    private bool playing = false;
-    private HashSet<SkullSmash> currentSkull= new HashSet<SkullSmash>();
 
-    private int clicks = 0;
-    private int clicks1 = 0;
-    public TMP_Text clickText;
-    public TMP_Text clickText1;
+    // this controls how were doing in corilation to the moles left
+
+   
+   
+
+
 
 
 
     public void StartGame1()
     {
         playButton.SetActive(false);
-       
-        
         player1WinText.SetActive(false);
         player2WinText.SetActive(false);
         outOfTimeText.SetActive(false);
         gameUI.SetActive(true);
+        nextButton.SetActive(false);
 
-      
-        // START WITH ... SECONDS 
+        //START WITH ... SECONDS 
         timeRemaining = startingTime;
-        //score = 0;
-        //scoreText[0].text = "0";
-        //scoreText[1].text = "0";
+        score = 0;
+        scoreText[0].text = "0";
+        scoreText[1].text = "0";
         playing = true;
-
-    }
-    public void Click()
-    {
-        if (playing)
-        {
-
-
-            clicks++;
-
-        }
+        currentClicks.Clear();
 
 
     }
 
 
-    public void Click1()
-    {
-        if (playing)
-        {
 
 
-            clicks1++;
-        }
-
-
-
-    }
 
 
     public void GameOver(int type)
@@ -96,19 +80,20 @@ public class GameManagerSkull : MonoBehaviour
         if (type == 0)
         {
             player1WinText.SetActive(true);
+            nextButton.SetActive(true);
 
-          
+
         }
         if (type == 2)
         {
             player2WinText.SetActive(true);
-
+            nextButton.SetActive(true);
 
         }
         if (type == 3)
         {
             outOfTimeText.SetActive(true);
-
+            nextButton.SetActive(true);
 
         }
 
@@ -117,62 +102,71 @@ public class GameManagerSkull : MonoBehaviour
     }
     //ending the game no more moles left to click
 
-  
 
-    void Update()
-    {
-        if (playing)
+        void Update()
         {
-           
-            timeRemaining -= Time.deltaTime;
-            if (timeRemaining <= 0)
+            if (playing)
             {
-                timeRemaining = 0;
-                GameOver(3);
-               
+                timeRemaining -= Time.deltaTime;
+                if (timeRemaining <= 0)
+                {
+                    timeRemaining = 0;
+                    GameOver(0);
+                    nextButton.SetActive(true);
+                }
+
+                if score[0] <= score[1]
+                {
+
+                    GameOver(2);
+
+
+
+
+                }
+
+                if score[1] <= score[0]
+                {
+
+                    GameOver(3);
+
+
+                }
+
+
+                timeText.text = $"{(int)timeRemaining / 60}:{(int)timeRemaining % 60:D2}";
+
+                //15 min in video he explains this part, this is bascially saying once 10 moles have been hit the level diffculty will increase
+                //once 10 moles are hit odwn more molews will apprear
+                if (currentClicks.Count)
+                {
+                    //chose a random mole
+                    int index = Random.Range(0, skulls.Count);
+
+                    if (!currentClicks.Contains(skulls[index]))
+                    {
+                        currentClicks.Add(skulls[index]);
+                        
+                    }
+
+                }
             }
-            
-            if (clicks >= 15)
-            {
-               
-                GameOver(0);
-                clicks = 15;
-               
-
-            }
-
-            if (clicks1 >= 15)
-            {
-                clicks1 = 15;
-                GameOver(2);
-               
-
-            }
-
-
-
 
         }
-        
-        clickText.text = "Player One: " + clicks;
+        public void AddScore(int moleIndex, int playerIndex) //for when we've sucessfully clicked the mole
+        {
+            //add and update score
+            score += 1;
+            scoreText[playerIndex].text = $"{score}";
 
-        clickText1.text = "Player Two: " + clicks1;
 
-        timeText.text = $"{(int)timeRemaining / 60}:{(int)timeRemaining % 60:D2}";
+            currentClicks.Remove(skulls[moleIndex]);
+
+        }
+
+
 
     }
-
-
- 
-
-
-   
-
-
-
-
-
-
 
 
 }

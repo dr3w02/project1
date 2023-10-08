@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
+        {
             Wack();
         }
     }
@@ -37,6 +37,10 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag == "Mole")
         {
             currentMole = collision.GetComponent<Mole>();
+           
+
+          
+
         }
     }
 
