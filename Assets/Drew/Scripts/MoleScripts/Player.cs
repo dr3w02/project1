@@ -1,27 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
 
     public int playerIndex;
     public Mole currentMole;
+    public float moveSpeed = 5f;
+    public PlayerControls playerControls;
 
+    
+ 
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+
+   
+
+
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.UpArrow)) // change this for controller
+
         {
-            Wack();
+            
+                Wack();
         }
+
+
+        
+      
     }
 
     public void Wack()
@@ -31,6 +42,8 @@ public class Player : MonoBehaviour
             currentMole.HitMole(playerIndex);
         }
     }
+
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

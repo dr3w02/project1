@@ -1,25 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Analytics;
+using static System.TimeZoneInfo;
 
 public class Mole : MonoBehaviour
 {
     [Header("Graphics")] // this is grabbing all the spites(images)
-    [SerializeField] private Sprite mole;
-    [SerializeField] private Sprite moleHardHat;
-    [SerializeField] private Sprite moleHatBroken;
-    [SerializeField] private Sprite moleHit;
+    [SerializeField] private Sprite angel;
+    [SerializeField] private Sprite angelWings;
+    [SerializeField] private Sprite angelWingsHit;
+    [SerializeField] private Sprite angelHit;
     [SerializeField] private Sprite moleHatHit;
+    [SerializeField] private Sprite bomb;
+    [SerializeField] private Sprite bombExplode;
 
     [Header("GameManager")]
     [SerializeField] private GameManager gameManager;
     // this is grabbing my other script called game manager
 
 
-
-
     //Sprite Position//
-    private Vector2 startPostion = new Vector2(0f, -2.5f);
+    private Vector2 startPostion = new Vector2(0f, -2.26f );
     private Vector2 endPostion = Vector2.zero;
 
     // How Long it takes to do the show/hide animation//
@@ -37,17 +39,19 @@ public class Mole : MonoBehaviour
 
     //Mole Parameters being able to click on mole
     private bool hittable = true;
+   
+   
 
     //for hard hat mole
     public enum MoleType { Standard, HardHat, Bomb };
     private MoleType moleType;
     private float hardRate = 0.25f;
-    private float bombRate = 0f;
+    private float bombRate = 1f;
     private int lives;
     //^^^^^^ this is to give the hard hat guys two lives harder to get rid of
     private int moleIndex = 0;
 
-
+   
     // use the Game Manager script to quickly identify the moles
     public void SetIndex(int index)
     {
@@ -131,12 +135,12 @@ public class Mole : MonoBehaviour
 
     public void HitMole(int player)
     {
-        if (hittable)
+        if (hittable )
         {
             switch (moleType)
             {
                 case MoleType.Standard:
-                    spriteRenderer.sprite = moleHit;
+                    spriteRenderer.sprite = angelHit;
                     gameManager.AddScore(moleIndex, player);
                     //stop the animation of the normal mole as its been hit and now dead
                     StopAllCoroutines();
@@ -146,6 +150,7 @@ public class Mole : MonoBehaviour
                     // Turn off hittable so that we cant keep tapping for score.
 
                     hittable = false;
+                 
 
                     break;
 
@@ -153,7 +158,7 @@ public class Mole : MonoBehaviour
                     //if lives == 2 reduce the life and change the sprite to the one with the broken hat
                     if (lives == 2)
                     {
-                        spriteRenderer.sprite = moleHatBroken;
+                        spriteRenderer.sprite = angelWingsHit;
                         lives--;
                     }
 
@@ -166,69 +171,26 @@ public class Mole : MonoBehaviour
                         StartCoroutine(QuickHide());
                         //turn of the hittable now so the player cant just keep clicking for a higher score
                         hittable = false;
+                   
                     }
                     break;
 
+                
+                
                 case MoleType.Bomb: // this completely ends the game when the bomb is clicked
 
+                    spriteRenderer.sprite = bomb;
 
-                    gameManager.GameOver(1);  //the 1 indicates it was from a bomb
-
-                    break;
-                default:
-                    break;
-            }
-
-        }
-    }
-
-
-    /*
-    private void OnMouseDown()
-    {
-        if (hittable)
-        {
-            switch (moleType)
-            {
-                case MoleType.Standard:
-                    spriteRenderer.sprite = moleHit;
-                    gameManager.AddScore(moleIndex);
-                    //stop the animation of the normal mole as its been hit and now dead
-                    StopAllCoroutines();
-                    StartCoroutine(QuickHide());
-
-
-                    // Turn off hittable so that we cant keep tapping for score.
-
-                    hittable = false;
-
-                    break;
-
-                case MoleType.HardHat:
-                    //if lives == 2 reduce the life and change the sprite to the one with the broken hat
-                    if (lives == 2)
-                    {
-                        spriteRenderer.sprite = moleHatBroken;
-                        lives--;
-                    }
-
-                    else
-                    {
-                        spriteRenderer.sprite = moleHatHit;
-                        gameManager.AddScore(moleIndex);
-                        //stop the animation
-                        StopAllCoroutines();
-                        StartCoroutine(QuickHide());
-                        //turn of the hittable now so the player cant just keep clicking for a higher score
+                    if (Input.GetKeyDown(KeyCode.UpArrow))
+                        gameManager.GameOver(5);
+                    spriteRenderer.sprite = bombExplode;
                         hittable = false;
-                    }
-                    break;
-
-                case MoleType.Bomb: // this completely ends the game when the bomb is clicked
 
 
-                    gameManager.GameOver(1);  //the 1 indicates it was from a bomb
-
+                    if(Input.GetKeyDown(KeyCode.UpArrow))
+                        gameManager.GameOver(5);
+                        spriteRenderer.sprite = bombExplode;
+                        hittable = false;
                     break;
                 default:
                     break;
@@ -237,7 +199,8 @@ public class Mole : MonoBehaviour
         }
     }
 
-    */
+
+
 
     private IEnumerator QuickHide()
     {
@@ -267,10 +230,12 @@ public class Mole : MonoBehaviour
         if (random < bombRate)
         {
             //Make A Bomb
+            
             moleType = MoleType.Bomb;
             hittable = true;
-            //animator sets the sprite
-            animator.enabled = true;
+          
+            
+            
 
         }
         else
@@ -281,18 +246,19 @@ public class Mole : MonoBehaviour
             {
                 //this is saying if the mole spirte is the hard hate mole to set that sprites lives to two.(two click kill)
                 moleType = MoleType.HardHat;
-                spriteRenderer.sprite = moleHardHat;
+                spriteRenderer.sprite = angelWings;
                 lives = 2;
             }
             else
             {
                 // this one says if not that mole its the ordinary mole and is set to one life. (one click kill)
                 moleType = MoleType.Standard;
-                spriteRenderer.sprite = mole;
+                spriteRenderer.sprite = angel;
                 lives = 1;
             }
 
             // this is to ensure were able to click on the mole 
+       
             hittable = true;
         }
     }
@@ -315,8 +281,12 @@ public class Mole : MonoBehaviour
         duration = Random.Range(durationMin, durationMax);
     }
 
+
+   
+
     public void StopGame()
     {
+        
         hittable = false;
         StopAllCoroutines();
     }
